@@ -29,6 +29,14 @@ gem 'rubocop', require: false
 # Use bootstrap and jquery for styles 
 gem 'bootstrap', '~> 4.1.3'
 gem 'jquery-rails'
+gem 'font-awesome-rails'
+
+# Authentication
+gem 'omniauth'
+gem 'omniauth-github'
+
+# Use for create environment variables
+gem 'dotenv-rails', groups: [:development, :test]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
