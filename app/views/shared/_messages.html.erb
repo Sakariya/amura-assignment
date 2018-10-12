@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12">
+    <% flash.each do |name, msg| %>
+      <% if msg.is_a?(String) %>
+        <% if name.to_s == 'notice' %>
+          <div class='alert fade-alert alert-success  notice_flash'>
+            <button class='close' data-dismiss= 'alert' aria-hidden = 'true' title= <%=I18n.t('global.controls.dismiss')%>>
+              &times;
+            </button>
+            <div id="flash_#{name}">
+              <%= msg.html_safe %>
+            </div>
+          </div>
+        <% elsif name.to_s == 'alert' %>
+          <div class='alert .fade-alert alert-danger  alert_flash'>
+            <button class='close' data-dismiss= 'alert' aria-hidden = 'true' title= <%=I18n.t('global.controls.dismiss')%>>
+              &times;
+            </button>
+            <div id="flash_#{name}">
+              <%= msg.html_safe %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>        
+</div>
