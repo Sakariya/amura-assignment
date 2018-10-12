@@ -8,8 +8,11 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
+  <body class="<%= 'home-background' if !logged_in? %>">   
     <%= render 'shared/navbar' if logged_in? %>
-    <%= yield %>
+    <div class="container">
+      <%= render 'shared/messages' %>
+      <%= yield %>
+    </div>
   </body>
 </html>
