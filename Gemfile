@@ -29,7 +29,9 @@ gem 'rubocop', require: false
 # Use bootstrap and jquery for styles 
 gem 'bootstrap', '~> 4.1.3'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'font-awesome-rails'
+
 
 # Authentication
 gem 'omniauth'

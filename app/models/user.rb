@@ -12,4 +12,7 @@ class User < ApplicationRecord
 
     return @user
   end
+
+  def self.format_commits(data)
+  end
 end
