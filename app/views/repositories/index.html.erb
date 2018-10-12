@@ -1,0 +1,21 @@
+<h1>Repositories</h1>
+<table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Type</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @repositories.each do |repo| %>
+			<tr>
+				<td>
+					<%= link_to repo.name, repository_path(repo.name) %>
+				</td>
+				<td><%= repo.description %></td>
+				<td><%= repo.private? ? 'Private' : 'Public' %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

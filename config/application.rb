@@ -17,7 +17,7 @@ module AmuraAssignment
     # the framework and any gems in your application.
 
     config.middleware.use OmniAuth::Builder do
-      provider :github, ENV['CLIENTID'], ENV['CLIENTSECRET']
+      provider :github, ENV['CLIENTID'], ENV['CLIENTSECRET'], scope: 'user,repo'
     end
   end
 end

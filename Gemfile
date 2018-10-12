@@ -34,6 +34,10 @@ gem 'font-awesome-rails'
 # Authentication
 gem 'omniauth'
 gem 'omniauth-github'
+gem 'github_api'
+
+# Use for all REST API
+gem 'rest-client'
 
 # Use for create environment variables
 gem 'dotenv-rails', groups: [:development, :test]
