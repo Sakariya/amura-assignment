@@ -9,10 +9,15 @@ class User < ApplicationRecord
       avatar_url: auth_hash[:info][:image],
       token: auth_hash[:credentials][:token],
     )
-
     return @user
   end
 
-  def self.format_commits(data)
+  def self.format_commits_data(response)
+    return response.map {|c| {
+      committer_date: c['commit']['committer']['date'],
+      committer_name: c['commit']['committer']['name'],
+      commit_message: c['commit']['message']
+      } 
+    }
   end
 end

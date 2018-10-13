@@ -29,9 +29,8 @@ gem 'rubocop', require: false
 # Use bootstrap and jquery for styles 
 gem 'bootstrap', '~> 4.1.3'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'font-awesome-rails'
-
+gem 'rails-bootstrap-daterangepicker'
 
 # Authentication
 gem 'omniauth'
@@ -39,7 +38,10 @@ gem 'omniauth-github'
 gem 'github_api'
 
 # Use for all REST API
-gem 'rest-client'
+# gem 'rest-client'
+gem 'faraday'
+gem 'faraday_middleware'
+
 
 # Use for create environment variables
 gem 'dotenv-rails', groups: [:development, :test]

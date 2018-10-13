@@ -3,186 +3,55 @@
 <script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
 <div class="row repo-commits">
+	<div class="col-md-8">
+		<h3> <%= @repo['name']%> </h3>
+	</div>
+	<div class="col-md-4 text-right">
+		<%= link_to "Repositories", repositories_path %>
+	</div>
 	<div class="col-md-12">
-		<!-- Nav tabs -->
-		<ul class="nav nav-tabs">
-			<li class="nav-item">
-				<a class="nav-link active" data-toggle="tab" href="#commit_history">Commits History</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#d3_graph">Commits History  Graph</a>
-			</li>
-		</ul>
-		<!-- Tab panes -->
-		<div class="tab-content">
-			<div id="commit_history" class="container tab-pane active"><br>
-				<table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
-						<thead>
-							<tr>
-								<th>Message</th>
-								<th>Committed By</th>
-								<th>Committed At</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% @commits.each do |commit| %>
-								<tr>
-									<td><%= commit.commit.message %></td>
-									<td><%= commit.commit.committer.name %></td>
-									<td><%= DateTime.parse(commit.commit.committer.date).strftime('%F %T') %></td>
-								</tr>
-							<% end %>
-						</tbody>
-					</table>
-			</div>
-			<div id="d3_graph" class="container tab-pane"><br>
-				<div class="row">
-					<div class="col-sm-12 text-right">
-						<label> Selct commit history date </label>
-						<input type="text" id="datepicker">
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="err text-center"></div>
-						<div id="florida"></div>
-					</div>
-			</div>
-		</div>
+		<hr/>
+		<p><%= @repo['description'] %></p>
 	</div>
 </div>
 
+<br/>
+<div class="card">
+	<div class="card-header">Commits History Graph</div>
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-3">
+				<label> Select commits history date range </label>
+			</div>
+			<div class="col-md-9">
+				<input type="text" name="daterange" value="<%= @since_date.strftime("%m/%d/%Y") %> - <%= @until_date.strftime("%m/%d/%Y") %>" class="form-control" />
+			</div>
+		</div>
+		<br/><br/>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="err text-center"></div>
+				<div id="d3_commits_graph"></div>
+			</div>
+		</div>	
+	</div> 
+</div>
+
+
 <script>
-	$(document).ready(function(){
-		$( "#datepicker").datepicker({
-			dateFormat: "yy-mm-dd",
-			onSelect: function(dateText, inst) {
-				$.ajax({
-					url: "/repositories/<%= params[:id] %>",
-					type:"get",
-					dataType: "json",
-					data:{
-						date : dateText
-					},
-					success: function(data){
-						if(data.length == 0){
-							$(".err").html("No Commits Found In Selected Date")
-							$("#florida").html('');
-						}else{
-							$(".err").html('');
-							createChart(data);
-						}        
-					},
-					error: function(jqXHR, textStatus, errorThrown){
-						alert('error');
-					}        
-				});
+	$(function() {
+		repo_name = "<%= params[:id] %>";
+		start_date = "<%= @since_date.strftime("%Y-%m-%d") %>";
+		end_date = "<%= @until_date.strftime("%Y-%m-%d") %>";
+		$('input[name="daterange"]').daterangepicker({
+			locale: {
+				format: 'yy-mm-dd'
 			}
+		}, function(start, end, label) {
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			getCommitsHistory(start_date, end_date, repo_name);
 		});
+		getCommitsHistory(start_date, end_date, repo_name);
 	});
-
-	function createChart(response){
-		var width = 800,   // width of svg
-		height = 400,  // height of svg
-		padding = 100; // space around the chart, not including labels
-		d3.select("svg").remove();
-		var response = response
-		data = []
-		var parseDate = d3.time.format("%d-%b-%y")
-		response.forEach(function(d){
-			date = new Date(d.commit.committer.date)
-			data.push({date:parseDate(date),close: new Date((d.commit.committer.date)).getHours(), commited_by: d.commit.committer.name, message: d.commit.message})
-		})
-		// var data = [{date:"1-May-12", close: 58.13},{date:"12-May-12", close: 1358.13}]
-		// Set the dimensions of the canvas / graph
-		var margin = {top: 30, right: 50, bottom: 30, left: 50},
-			width = 800 - margin.left - margin.right,
-			height = 400 - margin.top - margin.bottom;
-		// Parse the date / time
-		var parseDate = d3.time.format("%d-%b-%y").parse;
-		// Set the ranges
-		var x = d3.time.scale().range([0, width]);
-		var y = d3.scale.linear().range([height, 0]);
-		// Define the axes
-		var xAxis = d3.svg.axis().scale(x)
-			.orient("bottom").ticks(5);
-		var yAxis = d3.svg.axis().scale(y)
-			.orient("left").ticks(5);
-		// Define the line
-		var valueline = d3.svg.line()
-			.x(function(d) { return x(d.date); })
-			.y(function(d) { return y(d.close); });
-				
-		var toolTip = d3.tip()
-			.attr('class', 'd3-tip')
-			.offset([-10, 0])
-			.html(function (d) {
-				var tooltipHTML = "<span class = 'name'>" + "Commited by :- " + d.commited_by + "</span><br/>" + "Commit Message :- " + d.message + "<br/>" +  "On Date :- " + d.date;
-				return tooltipHTML;
-			});
-		// Adds the svg canvas
-		var svg = d3.select("#florida")
-			.append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-			.append("g")
-			.attr("transform", 
-			"translate(" + margin.left + "," + margin.top + ")");
-
-		svg.call(toolTip);
-		// Get the data
-		data.forEach(function(d) {
-			d.date = parseDate(d.date);
-			d.close = +d.close;
-		});
-		// Scale the range of the data
-		x.domain(d3.extent(data, function(d) { return d.date; }));
-		y.domain([0, d3.max(data, function(d) { return d.close; })]);
-
-		svg.append("text")
-			.attr("x", (width / 2))             
-			.attr("y", 0 - (margin.top / 2))
-			.attr("text-anchor", "middle")  
-			.style("font-size", "20px") 
-			.style("text-decoration", "underline")  
-			.text("Commit History Graph");
-
-		// Add the valueline path.
-		svg.append("path")
-			.attr("class", "line")
-			.attr("d", valueline(data));
-
-		// Add the scatterplot
-		svg.selectAll("dot")
-			.data(data)
-			.enter().append("circle")
-			.attr("r", 3.5)
-			.attr("cx", function(d) { return x(d.date); })
-			.attr("cy", function(d) { return y(d.close); })
-			.text(function(d){return d.commited_by;})
-			.on('mouseover', toolTip.show)
-			.on('mouseout', toolTip.hide);
-
-			// Add the X Axis
-			svg.append("g")
-				.attr("class", "x axis")
-				.attr("transform", "translate(0," + height + ")")
-				.call(xAxis);
-
-			// Add the Y Axis
-			svg.append("g")
-				.attr("class", "y axis")
-				.call(yAxis);
-
-			svg.append("text")
-				.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-				.attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-				.text("Time");
-
-			svg.append("text")
-				.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-				.attr("transform", "translate("+ (width/2) +","+(height-(padding/3))+")")  // centre below axis
-				.text("Date");
-	}
-
-	</script>
+</script>
