@@ -1,10 +1,11 @@
-<!-- Image and text -->
 <nav class="navbar navbar-light bg-light">
-  <%= link_to repositories_path, class: 'navbar-brand' do %>
-    <%= image_tag(@current_user.avatar_url, size: '30x30', class: "d-inline-block align-top") %>
-    <%= @current_user.name %>
-  <% end %>
-  <div class="navbar-nav">
-    <%= link_to "Logout", logout_path, method: :delete, class: "nav-item nav-link pull-right" %>
+  <div class="container">
+    <%= link_to repositories_path, class: 'navbar-brand' do %>
+      <%= image_tag(@current_user.avatar_url, size: '30x30', class: "d-inline-block align-top") %>
+      <%= @current_user.name %>
+    <% end %>
+    <div class="navbar-nav">
+      <%= link_to "Logout", logout_path, method: :delete, class: "nav-item nav-link pull-right" %>
+    </div>
   </div>
 </nav>
