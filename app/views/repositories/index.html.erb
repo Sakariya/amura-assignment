@@ -1,21 +1,33 @@
 <h1>Repositories</h1>
-<table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
+<table id="example" class="table table-striped table-bordered nowrap">
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Description</th>
+			<th>Open issues</th>
+			<th>Stars</th>
+			<th>Forks</th>			
 			<th>Type</th>
 		</tr>
 	</thead>
-	<tbody>
-		<% @repositories.each do |repo| %>
+	<tbody>		
+		<% if @repositories.present? %>			
+			<% @repositories.each do |repo| %>
+				<tr>
+					<td>
+						<%= link_to repo.name, repository_path(repo.name) %>
+					</td>
+					<td><%= repo.open_issues %></td>
+					<td><%= number_to_human(repo.stargazers_count, :format => '%n%u', :units => { :thousand => 'k' }) %></td>
+					<td><%= number_to_human(repo.forks, :format => '%n%u', :units => { :thousand => 'k' }) %></td>
+					<td><%= repo.private? ? 'Private' : 'Public' %></td>
+				</tr>
+			<% end %>
+		<% else %>
 			<tr>
-				<td>
-					<%= link_to repo.name, repository_path(repo.name) %>
+				<td colspan="5" class="text-center">
+					Not found any repository
 				</td>
-				<td><%= repo.description %></td>
-				<td><%= repo.private? ? 'Private' : 'Public' %></td>
 			</tr>
-		<% end %>
+		<% end %>		
 	</tbody>
 </table>
