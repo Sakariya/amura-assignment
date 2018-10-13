@@ -1,6 +1,7 @@
 require 'faraday_middleware'
 require 'faraday'
 
+# Use for fetch github data
 class RepositoriesController < ApplicationController
   before_action :authenticate_user
 
