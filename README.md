@@ -20,10 +20,10 @@ And visit [http://localhost:3000/](http://localhost:3000/).
  
 ## Running test cases
 
-For run the test cases follows following command.
+For run the test cases follows following command and make sure test cases should be passed.
 
 ``` sh
-$ bundle exec rspec spec/controllers
+$ bundle exec rspec spec
 ```
 
 ## Structure of this repo
@@ -33,6 +33,7 @@ There are a number of branches that reflect progress through the problem:
 * `github-login` - That have a functioning authentication and authorization system, move to GitHub auth through omniauth.
 * `github-details` - Fetch list of available repositories of logged in user using [`github_api`](https://github.com/piotrmurach/github) gem.
 * `d3-graph` - Called API for get selected repository details and commits history and shows D3 line chart for shown commits history.
+* `test-cases` - This branch have Rspec test case for the controller.
 
 
 ## See Also
