@@ -11,7 +11,7 @@ First, you'll need a [Register a new OAuth application](https://github.com/setti
 $ git clone https://github.com/poojajk/amura-assignment.git
 $ cd githubamura-assignment/
 $ bundle install
-$ touch .env
+$ mv .env.example .env
 $ rails db:create db:migrate
 $ rails s 
 ```
