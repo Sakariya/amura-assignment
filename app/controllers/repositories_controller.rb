@@ -1,41 +1,31 @@
 # frozen_string_literal: true
 
-require 'faraday_middleware'
-require 'faraday'
-
 # Use for fetch github data
 class RepositoriesController < ApplicationController
   before_action :authenticate_user
 
   def index
-    @repositories = Github.repos.list user: @current_user.name, auto_pagination: true, type: :all
+    # Call service for get all repositories
+    response = GithubApi.new(user: @current_user)
+    @repositories = response.repositories
   end
 
   def show
+    # Set Date range for commits history
     @since_date = (Time.now - 5.day).beginning_of_day
     @until_date = Time.now
-
-    # Call githhub API for get selected repo
-    repo_url = 'https://api.github.com/repos/' + @current_user.name
-    repo_conn = Faraday.new(url: repo_url) do |faraday|
-      faraday.adapter Faraday.default_adapter
-      faraday.response :json
-    end
-    repo_response = repo_conn.get(params[:id], access_token: @current_user.token)
-    @repo = repo_response.body
+    # Call service for get repository detail
+    response = GithubApi.new(user: @current_user, repo_name: params[:id])
+    @repo = response.repository
   end
 
   def repo_commits
-    @since_date = params[:since_date].present? ? params[:since_date].to_date.beginning_of_day : (Time.now - 5.day).beginning_of_day
-    @until_date = params[:until_date].present? ? params[:until_date].to_date.end_of_day : Time.now
-    # Call github API for get commits between since and untill date.
-    url = 'https://api.github.com/repos/' + @current_user.name + '/' + params[:id]
-    conn = Faraday.new(url: url) do |faraday|
-      faraday.adapter Faraday.default_adapter
-      faraday.response :json
-    end
-    response = conn.get('commits', access_token: @current_user.token, since: @since_date, until: @until_date)
-    @commits = User.format_commits_data(response.body)
+    @since_date = params[:since_date].to_date.beginning_of_day
+    @until_date = params[:until_date].to_date.end_of_day
+    # Call service for get repository commits history
+    response = GithubApi.new(user: @current_user, repo_name: params[:id],
+                             since_date: @since_date, until_date: @until_date)
+    @commits = response.repo_commits
     render json: @commits
   end
 end
