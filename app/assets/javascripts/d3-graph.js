@@ -15,7 +15,7 @@ function getCommitsHistory(start_date, end_date, repo_name) {
 		success: function(data){
 			if(data.length == 0){
 				$('.err').html('Not found commits between ' + start_date + ' to ' + end_date);
-				$('#florida').html('');
+				$('#d3_commits_graph').html('');
 			}else{
 				$('.err').html('');
 				createChart(data);
