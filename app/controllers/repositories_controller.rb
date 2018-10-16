@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faraday_middleware'
 require 'faraday'
 
@@ -36,5 +38,4 @@ class RepositoriesController < ApplicationController
     @commits = User.format_commits_data(response.body)
     render json: @commits
   end
-  
 end

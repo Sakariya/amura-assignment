@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # User model for save users data
 class User < ApplicationRecord
   def self.find_or_create_from_auth_hash(auth_hash)
@@ -10,11 +12,11 @@ class User < ApplicationRecord
       avatar_url: auth_hash[:info][:image],
       token: auth_hash[:credentials][:token]
     )
-    return @user
+    @user
   end
 
   def self.format_commits_data(response)
-    return response.map do |c| 
+    response.map do |c|
       {
         committer_date: c['commit']['committer']['date'],
         committer_name: c['commit']['committer']['name'],

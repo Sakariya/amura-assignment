@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class RepositoriesControllerTest < ActionDispatch::IntegrationTest
@@ -10,5 +12,4 @@ class RepositoriesControllerTest < ActionDispatch::IntegrationTest
     get repositories_show_url
     assert_response :success
   end
-
 end

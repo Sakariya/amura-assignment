@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SessionsController, type: :controller do
@@ -5,7 +7,7 @@ RSpec.describe SessionsController, type: :controller do
     context 'Success handling' do
       before(:each) do
         request.env['omniauth.auth'] = FactoryBot.create(:auth_hash, :github)
-        post :create, params: {provider: 'github'}
+        post :create, params: { provider: 'github' }
       end
       let(:user) { User.find_by(name: 'poojajk') }
 
@@ -20,10 +22,10 @@ RSpec.describe SessionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:user) {FactoryBot.create(:auth_hash, :github)}
+    let(:user) { FactoryBot.create(:auth_hash, :github) }
 
     before(:each) do
-      session[:user_id] =  user.id
+      session[:user_id] = user.id
     end
 
     it 'destroys the logged in user session' do
