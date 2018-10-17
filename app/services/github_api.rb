@@ -17,7 +17,7 @@ class GithubApi
   def repositories
     repo_url = @api_url + 'users/' + @user.name
     @connection = Faraday.new(url: repo_url)
-    response = @connection.get('repos', access_token: @user.token)
+    response = @connection.get('repos')
     User.format_repositories(JSON.parse(response.body))
   end
 
@@ -25,7 +25,7 @@ class GithubApi
   def repository
     repo_url = @api_url + 'repos/' + @user.name
     repo_conn = Faraday.new(url: repo_url)
-    response = repo_conn.get(@repo_name, access_token: @user.token)
+    response = repo_conn.get(@repo_name)
     if response.body['message'].present?
       nil
     else
@@ -38,7 +38,6 @@ class GithubApi
     repo_url = @api_url + 'repos/' + @user.name + '/' + @repo_name
     repo_conn = Faraday.new(url: repo_url)
     response = repo_conn.get('commits',
-                             access_token: @user.token,
                              since: @since_date,
                              until: @until_date)
     User.format_commits(JSON.parse(response.body))

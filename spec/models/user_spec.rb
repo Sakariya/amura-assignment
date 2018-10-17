@@ -12,7 +12,7 @@ RSpec.describe User, type: :model do
       }
     end
     let(:github_credentials) do
-      { token: 'e936805c1a65a94aa0f5eb64aea0a9a917c6b3f7' }
+      { token: 'ae87a569e3952ce9bb164f71b0f386d364e957b5' }
     end
     let(:auth_hash) do
       {
