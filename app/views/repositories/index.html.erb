@@ -16,12 +16,12 @@
 					<% @repositories.each do |repo| %>
 						<tr>
 							<td>
-								<%= link_to repo['name'], repository_path(repo['name']) %>
+								<%= link_to repo[:name], repository_path(repo[:name]) %>
 							</td>
-							<td><%= repo['open_issues'] %></td>
-							<td><%= number_to_human(repo['stargazers_count'], :format => '%n%u', :units => { :thousand => 'k' }) %></td>
-							<td><%= number_to_human(repo['forks'], :format => '%n%u', :units => { :thousand => 'k' }) %></td>
-							<td><%= repo['private'] ? 'Private' : 'Public' %></td>
+							<td><%= repo[:open_issues] %></td>
+							<td><%= number_to_human(repo[:stargazers_count], :format => '%n%u', :units => { :thousand => 'k' }) %></td>
+							<td><%= number_to_human(repo[:forks], :format => '%n%u', :units => { :thousand => 'k' }) %></td>
+							<td><%= repo[:private] ? 'Private' : 'Public' %></td>
 						</tr>
 					<% end %>
 				<% else %>

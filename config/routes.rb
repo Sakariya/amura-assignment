@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # Populate list of available repository
   resources :repositories, only: %i[index show] do
     member do
-      get 'repo_commits'
+      get 'repo_commits', defaults: { format: 'json' }
     end
   end
 

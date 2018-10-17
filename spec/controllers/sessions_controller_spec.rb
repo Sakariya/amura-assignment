@@ -5,6 +5,8 @@ RSpec.describe SessionsController, type: :controller do
   render_views
 
   let(:page) { Capybara::Node::Simple.new(response.body) }
+
+  # test case for login user with github account
   describe 'POST #create' do
     before(:each) do
       request.env['omniauth.auth'] = FactoryBot.create(:auth_hash, :github)
@@ -14,6 +16,7 @@ RSpec.describe SessionsController, type: :controller do
     session_context
   end
 
+  # test case for logout user
   describe 'DELETE #destroy' do
     let(:user) { FactoryBot.create(:auth_hash, :github) }
     before(:each) do
