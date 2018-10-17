@@ -4,14 +4,14 @@
 
 <div class="row repo-commits">
 	<div class="col-md-8">
-		<h3> <%= @repo['name']%> </h3>
+		<h3> <%= @repo[:name]%> </h3>
 	</div>
 	<div class="col-md-4 text-right">
 		<%= link_to "Repositories", repositories_path %>
 	</div>
 	<div class="col-md-12">
 		<hr/>
-		<p><%= @repo['description'] %></p>
+		<p><%= @repo[:description] %></p>
 	</div>
 </div>
 
