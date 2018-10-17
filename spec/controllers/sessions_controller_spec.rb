@@ -2,20 +2,16 @@
 
 require 'rails_helper'
 RSpec.describe SessionsController, type: :controller do
+  render_views
+
+  let(:page) { Capybara::Node::Simple.new(response.body) }
   describe 'POST #create' do
-    context 'Success handling' do
-      before(:each) do
-        request.env['omniauth.auth'] = FactoryBot.create(:auth_hash, :github)
-        post :create, params: { provider: 'github' }
-      end
-      let(:user) { User.find_by(name: 'poojajk') }
-      it 'should set :notice flash' do
-        expect(flash[:notice]).to eq('Logged in successfully')
-      end
-      it 'should set current_user to proper user' do
-        expect(subject.current_user).to eq(user)
-      end
+    before(:each) do
+      request.env['omniauth.auth'] = FactoryBot.create(:auth_hash, :github)
+      post :create, params: { provider: 'github' }
     end
+    let(:user) { User.find_by(name: 'poojajk') }
+    session_context
   end
 
   describe 'DELETE #destroy' do
@@ -23,7 +19,8 @@ RSpec.describe SessionsController, type: :controller do
     before(:each) do
       session[:user_id] = user.id
     end
-    it 'destroys the logged in user session' do
+    it 'should clear the session' do
+      expect(session).not_to be_empty
       delete :destroy
       expect(session).to be_empty
     end

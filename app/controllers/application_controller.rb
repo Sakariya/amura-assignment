@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user
-    redirect_to :root unless logged_in?
+    # rubocop:disable LineLength
+    redirect_to :root, alert: 'Please login with github account.' unless logged_in?
+    # rubocop:enable LineLength
   end
 end
