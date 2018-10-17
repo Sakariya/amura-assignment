@@ -17,7 +17,7 @@ class GithubApi
   def repositories
     repo_url = @api_url + 'users/' + @user.name
     @connection = Faraday.new(url: repo_url)
-    response = @connection.get('repos')
+    response = @connection.get('repos', access_token: @user.token)
     JSON.parse(response.body)
   end
 

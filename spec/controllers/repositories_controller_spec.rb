@@ -5,29 +5,32 @@ require 'rails_helper'
 RSpec.describe RepositoriesController, type: :controller do
   render_views
 
+  # init basic data
   let(:page) { Capybara::Node::Simple.new(response.body) }
+  let(:since_date) { (Time.now - 5.day).beginning_of_day }
+  let(:until_date) { Time.now }
+  let(:date_range) do
+    "#{since_date.strftime('%m/%d/%Y')} - #{until_date.strftime('%m/%d/%Y')}"
+  end
   login_user
+  current_user
 
+  # test case for list all repositories
   describe 'GET #index' do
-    it 'should have a current_user' do
-      expect(subject.current_user).to_not eq(nil)
-    end
-    it 'returns a success response' do
-      get :index
-      expect(response).to be_successful
-    end
-    context 'when user is signed out' do
-      before do
-        session[:user_id] = nil
-        allow_any_instance_of(ApplicationController)
-          .to receive(:current_user).and_return(nil)
-      end
-      it 'redirects to the root page if user is not authenticated' do
-        get :index
-        expect(response).to redirect_to(root_url)
-        expect(flash[:alert]).to eq('Please login with github account.')
-      end
-    end
     repositories_prospects
+    signedin_context(:index, false)
+  end
+
+  # test case for show repository detail
+  describe 'GET #show' do
+    repository_prospects
+    unknown_repository_context
+    signedin_context(:show, true)
+  end
+
+  # test case for show repository commit
+  describe 'GET #repo_commits' do
+    commits_context
+    signedin_context(:repo_commits, true)
   end
 end
